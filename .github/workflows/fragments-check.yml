@@ -1,0 +1,44 @@
+name: Fragments check
+
+on:
+  pull_request:
+    types: [labeled, unlabeled, opened, reopened, synchronize]
+    branches:
+      - master
+
+jobs:
+  check-fragment-added:
+    if: github.event.pull_request.user.type != 'Bot' && !contains(github.event.pull_request.labels.*.name, 'skip-fragment-check')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # `towncrier check` runs `git diff --name-only origin/main...`, which
+          # needs a non-shallow clone.
+          fetch-depth: 0
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Check if changelog fragment was added
+        run: |
+          pip install -r dev-requirements/towncrier.txt
+
+          if ! towncrier check --compare-with origin/${{ github.base_ref }}; then
+            exit 1
+          fi
+
+      - name: Check if linked to the correct pull request
+        run: |
+          diff=$(git diff origin/${{ github.base_ref }} HEAD --name-only)
+
+          changelog_fragments=$(echo "$diff" | grep "^changes/")
+          valid_changelog_fragments=$(echo "$diff" | grep "^changes/${{ github.event.number }}\.")
+
+          if [ "$changelog_fragments" != "$valid_changelog_fragments" ]; then
+            exit 1
+          fi

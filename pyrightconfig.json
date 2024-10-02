@@ -1,0 +1,27 @@
+{
+  "include": [
+    "app"
+  ],
+
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__"
+  ],
+
+  "ignore": [
+  ],
+
+  "defineConstant": {
+  },
+
+  "stubPath": "src/stubs",
+
+  "reportMissingImports": "error",
+  "reportMissingTypeStubs": false,
+
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Windows",
+
+  "venvPath": ".venv/"
+
+}

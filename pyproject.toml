@@ -1,0 +1,14 @@
+[tool.towncrier]
+package = "app"
+directory = "changes"
+filename = "CHANGELOG.md"
+issue_format = "[#{issue}](https://github.com/Decron-cc/bestauth/issues/{issue})"
+template = "changes/.template.md.jinja"
+# We use these values for headers in the template
+underlines = [2, 3]
+type = [
+    { name = "Breaking Changes",            directory = "breaking",      showcontent = true },
+    { name = "Deprecation",                 directory = "deprecation",   showcontent = true },
+    { name = "Features",                    directory = "feature",       showcontent = true },
+    { name = "Bugfixes",                    directory = "bugfix",        showcontent = true },
+]
